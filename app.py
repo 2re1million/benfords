@@ -4,6 +4,8 @@ import re
 from collections import defaultdict
 import math
 import pandas as pd
+import numpy as np
+import altair as alt
 
 def extract_numbers_from_pdf(file):
     reader = PyPDF2.PdfReader(file)
@@ -25,36 +27,47 @@ def benford_analysis(numbers):
     expected = [benford_distribution[i] for i in range(1, 10)]
     return observed, expected, leading_digits
 
-st.title("Benfords Lov Analyse")
+st.title("Benford's Law Analysis")
 
-uploaded_file = st.file_uploader("Last opp en PDF-fil", type="pdf")
+uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
 
 if uploaded_file:
-    st.write("Analyserer dokumentet ...")
+    st.write("Analyzing the document ...")
     numbers = extract_numbers_from_pdf(uploaded_file)
     
     if numbers:
         observed, expected, leading_digits_count = benford_analysis(numbers)
         
-        # Preparing data for Streamlit's bar chart
+        # Preparing data for Streamlit's bar chart with trendline
         df_chart = pd.DataFrame({
-            'Siffer': list(range(1, 10)),
-            'Observerte': observed,
-            'Forventet (Benford)': expected
+            'Digit': list(range(1, 10)),
+            'Observed': observed,
+            'Expected': expected
         })
         
-        st.bar_chart(df_chart.set_index('Siffer'))
+        bars = alt.Chart(df_chart).mark_bar().encode(
+            x='Digit:N',
+            y='Observed:Q',
+            color=alt.value('blue')
+        )
+        
+        line = alt.Chart(df_chart).mark_line(color='red').encode(
+            x='Digit:N',
+            y='Expected:Q'
+        )
+        
+        st.altair_chart(bars + line, use_container_width=True)
         
         # Displaying the count of leading digits
         df_count = pd.DataFrame({
-            'Siffer': list(range(1, 10)),
-            'Antall': [leading_digits_count[i] for i in range(1, 10)]
+            'Digit': list(range(1, 10)),
+            'Count': [leading_digits_count[i] for i in range(1, 10)]
         })
         
-        st.write("Antall av ledende siffer:")
-        st.dataframe(df_count.set_index('Siffer'))
+        st.write("Count of leading digits:")
+        st.dataframe(df_count.set_index('Digit'))
         
     else:
-        st.write("Ingen tall funnet i dokumentet.")
+        st.write("No numbers found in the document.")
 else:
-    st.write("Vennligst last opp en PDF-fil.")
+    st.write("Please upload a PDF file.")
