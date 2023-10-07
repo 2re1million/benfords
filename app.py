@@ -27,19 +27,6 @@ def benford_analysis(numbers):
     expected = [benford_distribution[i] * total_numbers for i in range(1, 10)]
     return observed, expected, leading_digits
 
-def benford_comment(observed, expected):
-    # Calculate the absolute differences
-    differences = [abs(o - e) for o, e in zip(observed, expected)]
-    
-    # Sum up the differences
-    total_difference = sum(differences)
-    
-    # Compare the total difference to a threshold (10% in this example)
-    if total_difference > 0.25:
-        return "Red Flag: The distribution deviates significantly from Benford's Law."
-    else:
-        return "The distribution is consistent with Benford's Law."
-
 
 st.title("Benford's Law Analysis")
 uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
