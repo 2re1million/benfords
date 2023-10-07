@@ -66,10 +66,6 @@ if uploaded_file:
         st.write("Count of leading digits:")
         st.dataframe(df_count.set_index('Digit'))
         
-        # Providing a comment based on chi-squared test result
-        comment = benford_comment(observed, expected)
-        st.write(comment)
-        
     else:
         st.write("No numbers found in the document.")
 else:
