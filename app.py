@@ -5,7 +5,6 @@ from collections import defaultdict
 import math
 import matplotlib.pyplot as plt
 
-
 def extract_numbers_from_pdf(file):
     reader = PyPDF2.PdfFileReader(file)
     text = ""
