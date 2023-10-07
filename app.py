@@ -62,7 +62,9 @@ if uploaded_file:
             'Digit': list(range(1, 10)),
             'Count': [leading_digits_count[i] for i in range(1, 10)]
         })
-        
+        st.info(""""💡 Benford's Law is a surprising, yet frequently observed phenomenon about the distribution of leading digits in many sets of numerical data. 
+        According to this law, in many naturally occurring datasets, the leading digit is likely to be small. 
+        For example, the number 1 appears as the leading digit about 30% of the time, while 9 appears as the leading digit less than 5% of the time.""")
         st.write("Count of leading digits:")
         st.dataframe(df_count.set_index('Digit'))
         
