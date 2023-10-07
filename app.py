@@ -29,6 +29,9 @@ def benford_analysis(numbers):
     return observed, expected, leading_digits
 
 def benford_comment(observed, expected):
+    # Ensure observed only contains counts for digits 1 through 9
+    observed = observed[1:10] if len(observed) == 10 else observed
+
     # Perform chi-squared test
     chi2_stat, p_val = chisquare(observed, expected)
     # Comment based on p-value (assuming significance level of 0.05)
