@@ -3,7 +3,7 @@ import PyPDF2
 import re
 from collections import defaultdict
 import math
-import matplotlib.pyplot as plt
+import pandas as pd
 
 def extract_numbers_from_pdf(file):
     reader = PyPDF2.PdfReader(file)
@@ -23,7 +23,7 @@ def benford_analysis(numbers):
 
     observed = [leading_digits[i] / total_numbers for i in range(1, 10)]
     expected = [benford_distribution[i] for i in range(1, 10)]
-    return observed, expected
+    return observed, expected, leading_digits
 
 st.title("Benfords Lov Analyse")
 
@@ -34,26 +34,27 @@ if uploaded_file:
     numbers = extract_numbers_from_pdf(uploaded_file)
     
     if numbers:
-        observed, expected = benford_analysis(numbers)
+        observed, expected, leading_digits_count = benford_analysis(numbers)
         
-        # Plotting
-        fig, ax = plt.subplots()
-        index = list(range(1, 10))
-        bar_width = 0.35
-
-        bar1 = ax.bar(index, observed, bar_width, label='Observerte', color='b')
-        bar2 = ax.bar([i + bar_width for i in index], expected, bar_width, label='Forventet (Benford)', color='r')
+        # Preparing data for Streamlit's bar chart
+        df_chart = pd.DataFrame({
+            'Siffer': list(range(1, 10)),
+            'Observerte': observed,
+            'Forventet (Benford)': expected
+        })
         
-        ax.set_xlabel('Siffer')
-        ax.set_ylabel('Frekvens')
-        ax.set_title('Observerte vs Forventet Frekvens av Ledende Siffer')
-        ax.set_xticks([i + bar_width/2 for i in index])
-        ax.set_xticklabels(index)
-        ax.legend()
+        st.bar_chart(df_chart.set_index('Siffer'))
         
-        st.pyplot(fig)
+        # Displaying the count of leading digits
+        df_count = pd.DataFrame({
+            'Siffer': list(range(1, 10)),
+            'Antall': [leading_digits_count[i] for i in range(1, 10)]
+        })
+        
+        st.write("Antall av ledende siffer:")
+        st.dataframe(df_count.set_index('Siffer'))
+        
     else:
         st.write("Ingen tall funnet i dokumentet.")
 else:
     st.write("Vennligst last opp en PDF-fil.")
-
