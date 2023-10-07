@@ -24,8 +24,9 @@ def benford_analysis(numbers):
     total_numbers = sum(leading_digits.values())
     benford_distribution = {i: math.log10(1 + 1/i) for i in range(1, 10)}
 
-    observed = [leading_digits[i] / total_numbers for i in range(1, 10)]
-    expected = [benford_distribution[i] for i in range(1, 10)]
+    benford_distribution = {i: math.log10(1 + 1/i) for i in range(1, 10)}
+    observed = [leading_digits[i] for i in range(1, 10)]
+    expected = [benford_distribution[i] * len(numbers) for i in range(1, 10)]
     return observed, expected, leading_digits
 
 def benford_comment(observed_counts, expected_proportions):
@@ -33,8 +34,8 @@ def benford_comment(observed_counts, expected_proportions):
     observed_counts = observed_counts[1:10] if len(observed_counts) == 10 else observed_counts
 
     # Convert expected proportions to expected counts
-    total_observed = sum(observed_counts)
-    expected_counts = [e * total_observed for e in expected_proportions]
+    total_numbers = sum(observed_counts)
+    expected_counts = [e * total_numbers for e in expected_proportions]
 
     # Perform chi-squared test
     chi2_stat, p_val = chisquare(observed_counts, expected_counts)
