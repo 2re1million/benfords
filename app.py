@@ -9,7 +9,7 @@ def extract_numbers_from_pdf(file):
     reader = PyPDF2.PdfReader(file)
     text = ""
     for page in reader.pages:
-        text += page.extractText()
+        text += page.extract_text()
     return [int(match[0]) for match in re.findall(r'(\d+)', text)]
 
 def benford_analysis(numbers):
