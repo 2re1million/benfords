@@ -1,5 +1,3 @@
-!pip install streamlit PyPDF2 matplotlib --q
-
 
 import streamlit as st
 import PyPDF2
