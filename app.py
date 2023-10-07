@@ -1,4 +1,4 @@
-pip install streamlit PyPDF2 matplotlib --q
+!pip install streamlit PyPDF2 matplotlib --q
 
 
 import streamlit as st
