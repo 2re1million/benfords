@@ -28,17 +28,20 @@ def benford_analysis(numbers):
     expected = [benford_distribution[i] for i in range(1, 10)]
     return observed, expected, leading_digits
 
-def benford_comment(observed, expected):
-    # Ensure observed only contains counts for digits 1 through 9
-    observed = observed[1:10] if len(observed) == 10 else observed
+def benford_comment(observed_counts, expected_proportions):
+    # Convert expected proportions to expected counts
+    total_observed = sum(observed_counts)
+    expected_counts = [e * total_observed for e in expected_proportions]
 
     # Perform chi-squared test
-    chi2_stat, p_val = chisquare(observed, expected)
+    chi2_stat, p_val = chisquare(observed_counts, expected_counts)
+    
     # Comment based on p-value (assuming significance level of 0.05)
     if p_val < 0.05:
         return "Red Flag: The distribution deviates significantly from Benford's Law."
     else:
         return "The distribution is consistent with Benford's Law."
+
 
 st.title("Benford's Law Analysis")
 
