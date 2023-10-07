@@ -6,10 +6,10 @@ import math
 import matplotlib.pyplot as plt
 
 def extract_numbers_from_pdf(file):
-    reader = PyPDF2.PdfFileReader(file)
+    reader = PyPDF2.PdfReader(file)
     text = ""
-    for page in range(reader.numPages):
-        text += reader.getPage(page).extractText()
+    for page in reader.pages:
+        text += page.extractText()
     return [int(match[0]) for match in re.findall(r'(\d+)', text)]
 
 def benford_analysis(numbers):
