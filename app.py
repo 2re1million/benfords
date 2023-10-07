@@ -6,26 +6,22 @@ import math
 import pandas as pd
 import numpy as np
 import altair as alt
+from scipy.stats import chisquare
 
 def extract_numbers_from_pdf(file):
-    reader = PyPDF2.PdfReader(file)
-    text = ""
-    for page in reader.pages:
-        text += page.extract_text()
-    return [int(match[0]) for match in re.findall(r'(\d+)', text)]
+    # ... [rest of the function]
 
 def benford_analysis(numbers):
-    leading_digits = defaultdict(int)
-    for num in numbers:
-        leading_digit = int(str(num)[0])
-        leading_digits[leading_digit] += 1
+    # ... [rest of the function]
 
-    total_numbers = sum(leading_digits.values())
-    benford_distribution = {i: math.log10(1 + 1/i) for i in range(1, 10)}
-
-    observed = [leading_digits[i] / total_numbers for i in range(1, 10)]
-    expected = [benford_distribution[i] for i in range(1, 10)]
-    return observed, expected, leading_digits
+def benford_comment(observed, expected):
+    # Perform chi-squared test
+    chi2_stat, p_val = chisquare(observed, expected)
+    # Comment based on p-value (assuming significance level of 0.05)
+    if p_val < 0.05:
+        return "Red Flag: The distribution deviates significantly from Benford's Law."
+    else:
+        return "The distribution is consistent with Benford's Law."
 
 st.title("Benford's Law Analysis")
 
@@ -37,6 +33,10 @@ if uploaded_file:
     
     if numbers:
         observed, expected, leading_digits_count = benford_analysis(numbers)
+        
+        # Compute total counts for observed and expected for chi-squared test
+        total_observed_counts = [count for count in leading_digits_count.values()]
+        total_expected_counts = [e * sum(total_observed_counts) for e in expected]
         
         # Preparing data for Streamlit's bar chart with trendline
         df_chart = pd.DataFrame({
@@ -66,6 +66,10 @@ if uploaded_file:
         
         st.write("Count of leading digits:")
         st.dataframe(df_count.set_index('Digit'))
+        
+        # Providing a comment based on chi-squared test result
+        comment = benford_comment(total_observed_counts, total_expected_counts)
+        st.write(comment)
         
     else:
         st.write("No numbers found in the document.")
