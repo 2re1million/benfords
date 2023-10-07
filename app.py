@@ -29,6 +29,9 @@ def benford_analysis(numbers):
     return observed, expected, leading_digits
 
 def benford_comment(observed_counts, expected_proportions):
+    # Ensure observed counts only include counts for digits 1 through 9
+    observed_counts = observed_counts[1:10] if len(observed_counts) == 10 else observed_counts
+
     # Convert expected proportions to expected counts
     total_observed = sum(observed_counts)
     expected_counts = [e * total_observed for e in expected_proportions]
