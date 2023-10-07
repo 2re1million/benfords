@@ -23,8 +23,7 @@ def benford_analysis(numbers):
 
     total_numbers = sum(leading_digits.values())
     benford_distribution = {i: math.log10(1 + 1/i) for i in range(1, 10)}
-
-    benford_distribution = {i: math.log10(1 + 1/i) for i in range(1, 10)}
+    
     observed = [leading_digits[i] for i in range(1, 10)]
     expected = [benford_distribution[i] * len(numbers) for i in range(1, 10)]
     return observed, expected, leading_digits
