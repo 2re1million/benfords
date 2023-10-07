@@ -2,3 +2,5 @@ streamlit
 PyPDF2 
 matplotlib
 re
+collections
+math
