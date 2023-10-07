@@ -35,7 +35,7 @@ def benford_comment(observed, expected):
     total_difference = sum(differences)
     
     # Compare the total difference to a threshold (10% in this example)
-    if total_difference > 0.10:
+    if total_difference > 0.25:
         return "Red Flag: The distribution deviates significantly from Benford's Law."
     else:
         return "The distribution is consistent with Benford's Law."
