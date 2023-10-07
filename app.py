@@ -9,10 +9,24 @@ import altair as alt
 from scipy.stats import chisquare
 
 def extract_numbers_from_pdf(file):
-    # ... [rest of the function]
+    reader = PyPDF2.PdfReader(file)
+    text = ""
+    for page in reader.pages:
+        text += page.extract_text()
+    return [int(match[0]) for match in re.findall(r'(\d+)', text)]
 
 def benford_analysis(numbers):
-    # ... [rest of the function]
+    leading_digits = defaultdict(int)
+    for num in numbers:
+        leading_digit = int(str(num)[0])
+        leading_digits[leading_digit] += 1
+
+    total_numbers = sum(leading_digits.values())
+    benford_distribution = {i: math.log10(1 + 1/i) for i in range(1, 10)}
+
+    observed = [leading_digits[i] / total_numbers for i in range(1, 10)]
+    expected = [benford_distribution[i] for i in range(1, 10)]
+    return observed, expected, leading_digits
 
 def benford_comment(observed, expected):
     # Perform chi-squared test
