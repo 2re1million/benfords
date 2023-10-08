@@ -29,15 +29,16 @@ def benford_analysis(numbers):
 
 
 st.title("Benford's Law Analysis")
-uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
+st.info("""💡 Benford's Law is a surprising, yet frequently observed phenomenon about the distribution of leading digits in many sets of numerical data. According to this law, in many naturally occurring datasets, the leading digit is likely to be small. For example, the number 1 appears as the leading digit about 30% of the time, while 9 appears as the leading digit less than 5% of the time.""")
+st.write("")
 
-st.info("""💡 Benford's Law is a surprising, yet frequently observed phenomenon about the distribution of leading digits in many sets of numerical data.  According to this law, in many naturally occurring datasets, the leading digit is likely to be small.  For example, the number 1 appears as the leading digit about 30% of the time, while 9 appears as the leading digit less than 5% of the time.""")
-st.write("Count of leading digits:")
+uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
 
 if uploaded_file:
     st.write("Analyzing the document ...")
     numbers = extract_numbers_from_pdf(uploaded_file)
-    
+    st.info("""🔎 Look out for; an alignment between the observed frequencies of leading digits and the expected frequencies as per Benford's Law, with minimal deviations or anomalies""")
+
     if numbers:
         observed, expected, leading_digits_count = benford_analysis(numbers)
 
@@ -65,8 +66,9 @@ if uploaded_file:
             'Digit': list(range(1, 10)),
             'Count': [leading_digits_count[i] for i in range(1, 10)]
         })
-
-        st.dataframe(df_count.set_index('Digit'))
+        df_wide = df_count.set_index('Digit').T
+        st.write("Count of leading digits:")
+        st.dataframe(df_wide)
         
     else:
         st.write("No numbers found in the document.")
